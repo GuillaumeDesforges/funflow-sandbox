@@ -10,5 +10,5 @@ someFunc = putStrLn "someFunc"
 
 someTask :: SimpleFlow () String
 someTask = proc () -> do
-    name <- stepIO (const $ putStrLn "Yolo ?" >> getLine) -< ()
+    name <- stepIO (const $ putStrLn "What's your name ?" >> getLine) -< ()
     returnA -< name
