@@ -1,0 +1,68 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 4c67cd136c563af37f74370544ce1cba7e4c402fbca4eb1ddfcdbd80a23002c2
+
+name:           funflow-sandbox
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/GuillaumeDesforges/funflow-sandbox#readme>
+homepage:       https://github.com/GuillaumeDesforges/funflow-sandbox#readme
+bug-reports:    https://github.com/GuillaumeDesforges/funflow-sandbox/issues
+author:         Guillaume Desforges
+maintainer:     guillaume.desforges@tweag.io
+copyright:      2020 Guillaume Desforges
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/GuillaumeDesforges/funflow-sandbox
+
+library
+  exposed-modules:
+      Sandbox
+  other-modules:
+      Paths_funflow_sandbox
+  hs-source-dirs:
+      src
+  build-depends:
+      base <5
+    , funflow ==1.6.0
+    , path ==0.6.1
+  default-language: Haskell2010
+
+executable funflow-sandbox-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_funflow_sandbox
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base <5
+    , funflow ==1.6.0
+    , funflow-sandbox
+    , path ==0.6.1
+  default-language: Haskell2010
+
+test-suite funflow-sandbox-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_funflow_sandbox
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base <5
+    , funflow ==1.6.0
+    , funflow-sandbox
+    , path ==0.6.1
+  default-language: Haskell2010
