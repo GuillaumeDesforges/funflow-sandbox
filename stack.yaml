@@ -35,7 +35,10 @@ packages:
 # forks / in-progress versions pinned to a git hash. For example:
 #
 extra-deps:
-  - funflow-1.6.0
+  - github: tweag/funflow
+    commit: 7d8f088f2087423a9314d75c4d0d0c46806dde1e
+    subdirs:
+      - funflow
   - cas-hashable-1.0.1@sha256:fa10169aa9c58566eb3bfcda3fb62d76390ea43d8cdcc0878ab0dae2c93ba325,1548
   - cas-store-1.0.1@sha256:6d91502edce942ec2fe72cc2380acf23511b9b07be63e9bd3d0c9f6510102883,2757
 # Override default flag values for local packages and extra-deps
