@@ -1,14 +1,18 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE Arrows #-}
 
 module Sandbox where
 
-import Data.Char (toUpper)
-import Path (absdir, Path, Abs, Dir)
+import Path ( absdir, Path, Abs, Dir )
 
-import Control.Arrow (returnA, (>>>))
-import Control.Funflow (SimpleFlow, step, stepIO)
-import Control.Funflow.Exec.Simple (withSimpleLocalRunner)
+import Control.Arrow ( returnA, (>>>) )
+import Control.Funflow ( SimpleFlow, step, stepIO, docker )
+import Control.Funflow.Exec.Simple ( withSimpleLocalRunner )
+import Control.Funflow.External ( OutputCapture(NoOutputCapture, StdOutCapture), stringParam, Env(EnvInherit, EnvExplicit) )
+import qualified Control.Funflow.External.Docker as Docker
+
+import qualified Data.CAS.ContentStore as CS
 
 import Common
 
@@ -73,6 +77,26 @@ example4 = Example {
     success = \result -> logResult result
 }
 
+-- Example 5 : run a task in Docker
+flow5 :: SimpleFlow () CS.Item
+flow5 = docker $ const Docker.Config {
+    Docker.image = "ubuntu",
+    Docker.optImageID = Nothing,
+    Docker.command = stringParam "pwd",
+    -- could be NoOutputCapture
+    Docker.stdout = NoOutputCapture,
+    Docker.args = [],
+    -- could be EnvExplicit
+    Docker.env = EnvInherit
+}
+
+example5 :: Example () CS.Item
+example5 = Example {
+    flow = flow5,
+    description = "a flow running a task in Docker",
+    input = (),
+    success = const mempty
+}
 
 --
 -- Run the examples
@@ -87,8 +111,9 @@ runExamples = do
         runner flow input = withSimpleLocalRunner path $ \run -> run flow input
     
     putStrLn "=== Running examples of flows ===\n"
-    testFlow runner example1
-    testFlow runner example2
-    testFlow runner example3
-    testFlow runner example4
+    -- testFlow runner example1
+    -- testFlow runner example2
+    -- testFlow runner example3
+    -- testFlow runner example4
+    testFlow runner example5
 

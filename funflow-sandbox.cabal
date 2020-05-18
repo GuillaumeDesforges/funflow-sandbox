@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 95efc73de995f03bee5872d400f6dd40e713413f6b93ab7881e3180eea418518
+-- hash: 6d0fba28e782cb98a2e83cae514acbcf8154166f295d71e531fb78eb685c53b6
 
 name:           funflow-sandbox
 version:        0.1.0.0
@@ -35,6 +35,7 @@ library
       src
   build-depends:
       base <5
+    , cas-store
     , funflow
     , path ==0.6.1
   default-language: Haskell2010
@@ -48,6 +49,7 @@ executable funflow-sandbox-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base <5
+    , cas-store
     , funflow
     , funflow-sandbox
     , path ==0.6.1
@@ -63,6 +65,7 @@ test-suite funflow-sandbox-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base <5
+    , cas-store
     , funflow
     , funflow-sandbox
     , path ==0.6.1

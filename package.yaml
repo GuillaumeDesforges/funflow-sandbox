@@ -21,8 +21,9 @@ description: Please see the README on GitHub at <https://github.com/GuillaumeDes
 
 dependencies:
   - base < 5
-  - funflow
   - path == 0.6.1
+  - funflow
+  - cas-store
 
 library:
   source-dirs: src
