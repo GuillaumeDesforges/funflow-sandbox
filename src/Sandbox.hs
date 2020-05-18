@@ -4,111 +4,79 @@
 module Sandbox where
 
 import Data.Char (toUpper)
-import GHC.Exception (SomeException)
 import Path (absdir, Path, Abs, Dir)
 
 import Control.Arrow (returnA, (>>>))
 import Control.Funflow (SimpleFlow, step, stepIO)
 import Control.Funflow.Exec.Simple (withSimpleLocalRunner)
 
+import Common
 
--- Some types to help understand what we manipulate here
-type FlowResult b = IO (Either SomeException b)
-type FlowRunner a b = SimpleFlow a b -> a -> FlowResult b
 
-data Example a b = Example {
-    flow :: (SimpleFlow a b),
-    description :: String,
-    input :: a,
-    -- Specific to our example here
-    success :: b -> IO ()
+-- Example 1 : we can make a Flow from a pure function using `step`
+flow1 :: (Num a) => SimpleFlow a a
+flow1 = step (+ 1)
+
+example1 :: (Num a, Show a) => Example a a
+example1 = Example {
+    flow = flow1,
+    description = "flow from a pure function",
+    input = 0,
+    success = logResult
 }
 
---
--- Define some flows (the most interesting part !)
---
 
--- Flow from a pure function
-flowFromFunction :: (Num a) => SimpleFlow a a
-flowFromFunction = step (\x -> x + 1)
+-- Example 2 : a Flow can do IO using the `stepIO` function
+flow2 :: SimpleFlow () ()
+flow2 = stepIO (\() -> putStrLn "Hello! This is a message that was made in a flow!")
 
--- Flow can use IO using the `stepIO` function
-flowUsingIO :: SimpleFlow () ()
-flowUsingIO = stepIO (\() -> putStrLn "Hello! This is a message that was made in a flow!")
+example2 :: Example () ()
+example2 = Example {
+    flow = flow2
+,
+    description = "simple flow that uses IO",
+    input = (),
+    success = const mempty
+}
 
--- Flow using the arrow syntax
-flowUsingArrowSyntax :: SimpleFlow () String
-flowUsingArrowSyntax = proc () -> do
+
+-- Example 3 : we can write more complex flows using the Arrow notation `proc`
+flow3 :: SimpleFlow () String
+flow3 = proc () -> do
     -- IO steps
     firstName <- stepIO (\() -> putStrLn "What's your first name ?" >> getLine) -< ()
     lastName <- stepIO (\() -> putStrLn "What's your last name ?" >> getLine) -< ()
     -- pure step
     fullName <- step $ (\(firstName, lastName) -> firstName ++ " " ++ lastName) -< (firstName, lastName)
-    -- Some other io step without a result to bind
+    -- Some other IO steps before returning the result
     stepIO (\fullName -> putStrLn $ "Your full name is " ++ fullName) -< fullName
-    -- return the result
+    -- return the result previously computed
     returnA -< fullName
 
--- Flow to demonstrate how to compose flows
-flowFromComposition :: SimpleFlow () ()
-flowFromComposition = flowUsingIO >>> flowUsingIO
+example3 :: Example () String
+example3 = Example {
+    flow = flow3,
+    description = "complex flow using the Arrow notation",
+    input = (),
+    success = logResult
+}
 
---
--- Our examples to run
---
+-- Example 4 : we can compose flows
+flow4 :: (Num a, Show a) => SimpleFlow a a
+flow4 = flow1 >>> flow1 >>> flow1
 
-logResult :: (Show a) => a -> IO ()
-logResult result = putStrLn $ "# At the end of the flow, we get the result: " ++ show result
-
-exampleFlowFromFunction :: (Num a, Show a) => Example a a
-exampleFlowFromFunction = Example {
-    flow = flowFromFunction,
-    description = "simple flow from a pure function",
+example4 :: (Num a, Show a) => Example a a
+example4 = Example {
+    flow = flow4,
+    description = "a composition of flows that increment the input three times",
     input = 0,
     success = \result -> logResult result
 }
 
-exampleFlowThatUsesIO :: Example () ()
-exampleFlowThatUsesIO = Example {
-    flow = flowUsingIO,
-    description = "simple flow that uses IO",
-    input = (),
-    success = \_ -> mempty
-}
-
-exampleFlowUsingArrowSyntax :: Example () String
-exampleFlowUsingArrowSyntax = Example {
-    flow = flowUsingArrowSyntax,
-    description = "flow that uses the Arrow syntax",
-    input = (),
-    success = \result -> logResult result
-}
-
-exampleFlowFromComposition :: Example () ()
-exampleFlowFromComposition = Example {
-    flow = flowFromComposition,
-    description = "a composition of flows",
-    input = (),
-    success = \result -> logResult result
-}
 
 --
 -- Run the examples
 --
-
-logErr :: Show a => a -> IO ()
-logErr err = putStrLn $ "/!\\ Something went wrong:" ++ show err
-
-logSuccess :: IO ()
-logSuccess = putStrLn "# It worked !"
-
-testFlow :: FlowRunner a b -> Example a b -> IO ()
-testFlow run example = do
-    putStrLn $ "# Running the example '" ++ description example ++ "'"
-    result <- run (flow example) (input example)
-    case result of
-        Left error -> logErr error
-        Right something -> logSuccess >> (success example) something
 
 runExamples :: IO ()
 runExamples = do
@@ -118,7 +86,9 @@ runExamples = do
         runner :: FlowRunner a b
         runner flow input = withSimpleLocalRunner path $ \run -> run flow input
     
-    testFlow runner exampleFlowFromFunction
-    testFlow runner exampleFlowThatUsesIO
-    testFlow runner exampleFlowUsingArrowSyntax
-    testFlow runner exampleFlowFromComposition
+    putStrLn "=== Running examples of flows ===\n"
+    testFlow runner example1
+    testFlow runner example2
+    testFlow runner example3
+    testFlow runner example4
+

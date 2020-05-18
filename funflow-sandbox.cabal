@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 99042d3a7afb18a0101909c819332ace7f57640c7e85640d2b918a06a663c607
+-- hash: 95efc73de995f03bee5872d400f6dd40e713413f6b93ab7881e3180eea418518
 
 name:           funflow-sandbox
 version:        0.1.0.0
@@ -27,6 +27,7 @@ source-repository head
 
 library
   exposed-modules:
+      Common
       Sandbox
   other-modules:
       Paths_funflow_sandbox
