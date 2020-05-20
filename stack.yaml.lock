@@ -8,6 +8,9 @@ packages:
     size: 239397
     subdir: cas/hashable
     url: https://github.com/tweag/funflow/archive/7d8f088f2087423a9314d75c4d0d0c46806dde1e.tar.gz
+    cabal-file:
+      size: 1548
+      sha256: fa10169aa9c58566eb3bfcda3fb62d76390ea43d8cdcc0878ab0dae2c93ba325
     name: cas-hashable
     version: 1.0.1
     sha256: e7a238101ee96e6f1011703893de02c44afb323370d019b9573f79a452a48e88
@@ -21,6 +24,9 @@ packages:
     size: 239397
     subdir: cas/s3
     url: https://github.com/tweag/funflow/archive/7d8f088f2087423a9314d75c4d0d0c46806dde1e.tar.gz
+    cabal-file:
+      size: 1146
+      sha256: 5597515a4b0a204644d90d66475d26290ccc31291e90f4827e0f74fda581b291
     name: cas-hashable-s3
     version: 1.0.0
     sha256: e7a238101ee96e6f1011703893de02c44afb323370d019b9573f79a452a48e88
@@ -34,6 +40,9 @@ packages:
     size: 239397
     subdir: cas/store
     url: https://github.com/tweag/funflow/archive/7d8f088f2087423a9314d75c4d0d0c46806dde1e.tar.gz
+    cabal-file:
+      size: 2752
+      sha256: 9a0abf71f2ec33ebc9b40862675653289b9c1dd4c475ec87f8f02a1531188fd2
     name: cas-store
     version: 1.0.1
     sha256: e7a238101ee96e6f1011703893de02c44afb323370d019b9573f79a452a48e88
@@ -47,6 +56,9 @@ packages:
     size: 239397
     subdir: funflow
     url: https://github.com/tweag/funflow/archive/7d8f088f2087423a9314d75c4d0d0c46806dde1e.tar.gz
+    cabal-file:
+      size: 4916
+      sha256: c89ad429d98920965be5f84f661157d1af5f84ceba94910895e5a340997be2b7
     name: funflow
     version: 1.6.0
     sha256: e7a238101ee96e6f1011703893de02c44afb323370d019b9573f79a452a48e88
