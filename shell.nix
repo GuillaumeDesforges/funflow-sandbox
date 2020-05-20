@@ -1,5 +1,4 @@
-{ pkgs ? import (builtins.fetchTarball https://nixos.org/channels/nixos-19.03/nixexprs.tar.xz) {},
-  ghcIde ? false
+{ enableGhcide ? false
 }:
 let
   pkgs = import <nixpkgs> {};
@@ -9,5 +8,6 @@ in
     buildInputs = with pkgs; [
       stack
       ghc
-    ] ++ (if ghcIde then [ghcide] else []) ;
+      docker
+    ] ++ lib.optionals enableGhcide [ghcide];
   }

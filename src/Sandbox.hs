@@ -77,16 +77,14 @@ example4 = Example {
     success = \result -> logResult result
 }
 
--- Example 5 : run a task in Docker
+-- Example 5 : run a task in Docker (creates an empty file `txt.txt`)
 flow5 :: SimpleFlow () CS.Item
 flow5 = docker $ const Docker.Config {
     Docker.image = "ubuntu",
     Docker.optImageID = Nothing,
-    Docker.command = stringParam "pwd",
-    -- could be NoOutputCapture
-    Docker.stdout = NoOutputCapture,
-    Docker.args = [],
-    -- could be EnvExplicit
+    Docker.command = stringParam "touch",
+    Docker.stdout = StdOutCapture,
+    Docker.args = [stringParam "text.txt"],
     Docker.env = EnvInherit
 }
 
@@ -95,7 +93,7 @@ example5 = Example {
     flow = flow5,
     description = "a flow running a task in Docker",
     input = (),
-    success = const mempty
+    success = logItem
 }
 
 --
@@ -110,10 +108,10 @@ runExamples = do
         runner :: FlowRunner a b
         runner flow input = withSimpleLocalRunner path $ \run -> run flow input
     
-    putStrLn "=== Running examples of flows ===\n"
-    -- testFlow runner example1
-    -- testFlow runner example2
-    -- testFlow runner example3
-    -- testFlow runner example4
+    putStrLn "\n=== Running examples of flows ===\n"
+    testFlow runner example1
+    testFlow runner example2
+    testFlow runner example3
+    testFlow runner example4
     testFlow runner example5
 

@@ -2,6 +2,7 @@ module Common where
 
 import GHC.Exception (SomeException)
 import Control.Funflow (SimpleFlow)
+import qualified Data.CAS.ContentStore as CS
 
 -- Some types to help understand what we manipulate here
 type FlowResult b = IO (Either SomeException b)
@@ -34,3 +35,11 @@ testFlow run example = do
 -- Some util functions for the examples
 logResult :: (Show a) => a -> IO ()
 logResult result = putStrLn $ "# At the end of the flow, we get the result: " ++ show result
+
+logItem :: CS.Item -> IO ()
+logItem item = 
+    let
+        hash :: String
+        hash = show $ CS.itemHash item
+    in
+        putStrLn $ "# Got item with hash" ++ hash
